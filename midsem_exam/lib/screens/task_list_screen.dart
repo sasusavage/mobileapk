@@ -93,26 +93,106 @@ class _TaskListScreenState extends State<TaskListScreen> {
     await _saveTasks();
   }
 
+  Future<void> _deleteTask(int index) async {
+    setState(() => _tasks.removeAt(index));
+    await _saveTasks();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final done = _tasks.where((t) => t.isDone).length;
+    final total = _tasks.length;
+    final progress = total == 0 ? 0.0 : done / total;
+
     return Scaffold(
+      backgroundColor: cs.surface,
       appBar: AppBar(
-        title: const Text('Task List'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text('My Tasks'),
       ),
-      body: _tasks.isEmpty
-          ? const Center(child: Text('No tasks yet. Tap + to add one.'))
-          : ListView.builder(
-              itemCount: _tasks.length,
-              itemBuilder: (context, index) {
-                return TaskItemTile(
-                  task: _tasks[index],
-                  onChanged: (value) => _toggleTask(index, value),
-                );
-              },
+      body: Column(
+        children: [
+          // ── Progress header ──────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$done of $total completed',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: cs.onSurface.withValues(alpha: 0.65),
+                          ),
+                    ),
+                    Text(
+                      '${(progress * 100).toStringAsFixed(0)}%',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: cs.primary),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 8,
+                    backgroundColor: cs.surfaceContainerHighest,
+                    valueColor: AlwaysStoppedAnimation(cs.primary),
+                  ),
+                ),
+              ],
             ),
-      floatingActionButton: FloatingActionButton(
+          ),
+          // ── Task list ────────────────────────────────────────────
+          Expanded(
+            child: _tasks.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.checklist_rounded,
+                            size: 64,
+                            color: cs.onSurface.withValues(alpha: 0.25)),
+                        const SizedBox(height: 12),
+                        Text(
+                          'No tasks yet.',
+                          style: TextStyle(
+                              color: cs.onSurface.withValues(alpha: 0.4)),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Tap + to add one.',
+                          style: TextStyle(
+                              color: cs.onSurface.withValues(alpha: 0.3),
+                              fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
+                    itemCount: _tasks.length,
+                    itemBuilder: (context, index) {
+                      return TaskItemTile(
+                        task: _tasks[index],
+                        onChanged: (value) => _toggleTask(index, value),
+                        onDelete: () => _deleteTask(index),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddTaskDialog,
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Task'),
       ),
     );
   }
