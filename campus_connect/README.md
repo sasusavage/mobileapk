@@ -56,6 +56,22 @@ flutter pub get
 flutter run
 ```
 
+### Secure API Key Setup (Secret Scanning Safe)
+
+This project now expects Firebase API keys through `--dart-define` instead of hardcoding keys in source code.
+
+Example run command:
+
+```bash
+flutter run -d chrome \
+	--dart-define=FIREBASE_WEB_API_KEY=YOUR_WEB_API_KEY \
+	--dart-define=FIREBASE_ANDROID_API_KEY=YOUR_ANDROID_API_KEY \
+	--dart-define=FIREBASE_IOS_API_KEY=YOUR_IOS_API_KEY \
+	--dart-define=FIREBASE_MACOS_API_KEY=YOUR_MACOS_API_KEY \
+	--dart-define=FIREBASE_WINDOWS_API_KEY=YOUR_WINDOWS_API_KEY \
+	--dart-define=FIREBASE_LINUX_API_KEY=YOUR_LINUX_API_KEY
+```
+
 ## Firestore Data Model
 
 Collection: `events`
