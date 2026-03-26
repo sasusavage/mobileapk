@@ -1,0 +1,29 @@
+{
+	"flutter": {
+		"platforms": {
+			"android": {
+				"default": {
+					"projectId": "mobila-app-fd10e",
+					"appId": "1:38104863071:android:8d9394b4ca593bc53c26ea",
+					"fileOutput": "android/app/google-services.json"
+				}
+			},
+			"dart": {
+				"lib/firebase_options.dart": {
+					"projectId": "mobila-app-fd10e",
+					"configurations": {
+						"android": "1:38104863071:android:8d9394b4ca593bc53c26ea",
+						"ios": "1:38104863071:ios:4c8b21750f993c713c26ea",
+						"macos": "1:38104863071:ios:4c8b21750f993c713c26ea",
+						"web": "1:38104863071:web:e16ad604d5c8a7bd3c26ea",
+						"windows": "1:38104863071:web:52a55ae3aaed5a2c3c26ea"
+					}
+				}
+			}
+		}
+	},
+	"firestore": {
+		"rules": "firestore.rules",
+		"indexes": "firestore.indexes.json"
+	}
+}
